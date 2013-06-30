@@ -1,4 +1,8 @@
-jasmine-demo-advanced
-=====================
+jasmine-can-demo
+================
 
-Advanced front-end JavaScript unit testing with Jasmine
+Demonstrate unit testing with Jasmine and CanJS
+
+    sudo npm install grunt-cli -g
+    npm install
+    grunt test
