@@ -76,10 +76,29 @@
 
                     <section>
                         <h2>Mocking methods</h2>
+
+                        <pre><code data-trim>
+describe('when a key is pressed that has a match', function () {
+
+    beforeEach(function () {
+        spyOn(autoComplete, 'getMatch').andReturn('monique');
+        $('#name').trigger($.Event('keypress', {charCode: 109}));
+    });
+
+    it('should invoke the getMatch function', function () {
+        expect(autoComplete.getMatch).toHaveBeenCalledWith('m');
+    });
+
+    it('should replace the value of the input field ', function () {
+        expect($('#name')).toHaveValue('monique');
+    });
+});
+                        </code></pre>
+
                     </section>
 
                     <section>
-                        <h2>Mocking functions</h2>
+                        <h2>Mocking global functions</h2>
                     </section>
 
                     <section>

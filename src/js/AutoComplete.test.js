@@ -18,12 +18,12 @@ describe('AutoComplete', function () {
             expect($('#name')).toHaveClass('auto-complete');
         });
 
-        describe('match', function () {
+        describe('getMatch', function () {
             var match;
 
             describe('when called with an empty string', function () {
                 beforeEach(function () {
-                    match = autoComplete.match('');
+                    match = autoComplete.getMatch('');
                 });
                 it('should return null', function () {
                     expect(match).toBeNull();
@@ -32,7 +32,7 @@ describe('AutoComplete', function () {
 
             describe('when called with a non-unique prefix', function () {
                 beforeEach(function () {
-                    match = autoComplete.match('m');
+                    match = autoComplete.getMatch('m');
                 });
                 it('should return null', function () {
                     expect(match).toBeNull();
@@ -41,7 +41,7 @@ describe('AutoComplete', function () {
 
             describe('when called with a unique prefix', function () {
                 beforeEach(function () {
-                    match = autoComplete.match('mi');
+                    match = autoComplete.getMatch('mi');
                 });
                 it('should return the match', function () {
                     expect(match).toBe('mike');
@@ -54,13 +54,13 @@ describe('AutoComplete', function () {
             var keypressEvent;
 
             beforeEach(function () {
-                spyOn(autoComplete, 'match').andReturn('mister');
+                spyOn(autoComplete, 'getMatch').andReturn('monique');
                 keypressEvent = spyOnEvent('#name', 'keypress');
                 $('#name').trigger($.Event('keypress', {charCode: 109})); // Note: 'm'
             });
 
-            it('should invoke the match function', function () {
-                expect(autoComplete.match).toHaveBeenCalledWith('m');
+            it('should invoke the getMatch function', function () {
+                expect(autoComplete.getMatch).toHaveBeenCalledWith('m');
             });
 
             it('should cancel the key event', function () {
@@ -68,7 +68,7 @@ describe('AutoComplete', function () {
             });
 
             it('should replace the value of the input field with the match', function () {
-                expect($('#name')).toHaveValue('mister');
+                expect($('#name')).toHaveValue('monique');
             });
 
         });
@@ -77,7 +77,7 @@ describe('AutoComplete', function () {
             var keypressEvent;
 
             beforeEach(function () {
-                spyOn(autoComplete, 'match').andReturn(null);
+                spyOn(autoComplete, 'getMatch').andReturn(null);
                 keypressEvent = spyOnEvent('#name', 'keypress');
                 $('#name').trigger($.Event('keypress', {charCode: 109})); // Note: 'm'
             });
