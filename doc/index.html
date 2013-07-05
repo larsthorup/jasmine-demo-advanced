@@ -462,6 +462,32 @@ describe('delayHide', function () {
 
                 <section>
                     <h2>Browser-specific tests</h2>
+                    <ul>
+                        <li>Some code is browser specific</li>
+                        <ul>
+                            <li>maybe using a browser specific API</li>
+                            <li>and might only be testable in that browser</li>
+                        </ul>
+                        <li>Tests can be conditioned</li>
+                        <li>Or iterated...</li>
+                    </ul>
+                    <pre><code data-trim>
+can.each([
+    {
+        response: {list: ['rachel', 'lakshmi']},
+        expected: ['rachel', 'lakshmi']
+    },
+    {
+        response: 500,
+        expected: []
+    }
+], function (scenario) {
+    describe('when ' + JSON.stringify(scenario.response), function () {
+        it('should ' + JSON.stringify(scenario.expected), function () {
+        });
+    });
+});
+                    </code></pre>
                 </section>
 
                 <section>
