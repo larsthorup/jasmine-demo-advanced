@@ -87,6 +87,18 @@
 
                 <section>
                     <h2>Jasmine Basics</h2>
+
+                    <pre><code data-trim>
+describe('Calculator', function () {
+    var calc;
+    beforeEach(function () {
+        calc = new Calculator();
+    });
+    it('should multiply', function () {
+        expect(calc.multiply(6, 7)).toBe(42);
+    });
+});
+                    </code></pre>
                 </section>
 
                 <section>
@@ -389,6 +401,11 @@ expect(keypressEvent).toHaveBeenPrevented();
                 </section>
 
                 <section>
+
+                    <section>
+                        <h2>Jasmine Matchers</h2>
+                    </section>
+
                     <section>
                         <h2>Expressive matchers</h2>
 
@@ -491,7 +508,15 @@ can.each([
                 </section>
 
                 <section>
-                    <h2>Full-page tests</h2>
+                    <h2>Resources</h2>
+                    <ul>
+                        <li><a href="https://github.com/larsthorup/jasmine-demo-advanced">github.com/larsthorup/jasmine-demo-advanced</a></li>
+                        <li><a href="https://twitter.com/larsthorup">@larsthorup</a></li>
+                        <li><a href="http://pivotal.github.io/jasmine/">pivotal.github.io/jasmine</a></li>
+                        <li><a href="https://github.com/velesin/jasmine-jquery/">github.com/velesin/jasmine-jquery</a></li>
+                        <li><a href="http://canjs.com/">canjs.com</a></li>
+                        <li><a href="https://github.com/hakimel/reveal.js">github.com/hakimel/reveal.js</a></li>
+                    </ul>
                 </section>
 
 			</div>
