@@ -396,26 +396,39 @@ expect(keypressEvent).toHaveBeenPrevented();
                             <li>Make your tests more readable</li>
                             <li>Use jasmine-jquery for jQuery-specific matchers</li>
                             <li>Instead of:</li>
-                        </ul>
 
-                        <pre><code data-trim>
+                            <pre><code data-trim>
 expect($('#name').is(':visible')).toBeFalsy();
-                        </code></pre>
+                            </code></pre>
 
-                        <ul>
                             <li>Prefer:</li>
-                        </ul>
 
-                        <pre><code data-trim>
+                            <pre><code data-trim>
 expect($('#name')).not.toBeVisible();
-                        </code></pre>
+                            </code></pre>
+
+                        </ul>
                     </section>
 
                     <section>
                         <h2>Roll your own matchers</h2>
 
                         <ul>
+                            <li>Make your tests even more readable</li>
                             <li><a href="https://github.com/pivotal/jasmine/wiki/Matchers">github.com/pivotal/jasmine/wiki/Matchers</a></li>
+                            <li>Like this can.js specific matcher:</li>
+                            <pre><code data-trim>
+expect($('#name')).toHaveControlOfType(AutoComplete);
+                            </code></pre>
+                            <li>Defined like this:</li>
+                            <pre><code data-trim>
+jasmine.getEnv().currentSpec.addMatchers({
+    toHaveControlOfType: function (expected) {
+        var actual = this.actual.controls(expected);
+        return actual.length > 0;
+    }
+});
+                            </code></pre>
                         </ul>
                     </section>
 

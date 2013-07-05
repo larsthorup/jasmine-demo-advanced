@@ -20,5 +20,13 @@
             window.Date = jasmine.GlobalDate;
         });
 
+        // Custom matcher
+        spec.addMatchers({
+            toHaveControlOfType: function (expected) {
+                var actual = this.actual.controls(expected);
+                return actual.length > 0;
+            }
+        });
+
     };
 })(jasmine, window);

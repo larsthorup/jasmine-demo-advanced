@@ -15,6 +15,12 @@ describe('AutoComplete', function () {
             });
         });
 
+        it('should associate the control with the element', function () {
+            expect($('#name').controls(AutoComplete)[0] instanceof window.AutoComplete).toBeTruthy();
+            expect($('#name')).toHaveControlOfType(window.AutoComplete);
+            expect($('#name')).not.toHaveControlOfType(window.BlogPost);
+        });
+
         it('should add class auto-complete', function () {
             expect($('#name')).toHaveClass('auto-complete');
         });

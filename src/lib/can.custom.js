@@ -2,10 +2,10 @@
  * CanJS - 1.1.6
  * http://canjs.us/
  * Copyright (c) 2013 Bitovi
- * Tue, 18 Jun 2013 18:00:59 GMT
+ * Fri, 05 Jul 2013 22:44:11 GMT
  * Licensed MIT
- * Includes: can/construct/construct.js,can/observe/observe.js,can/observe/compute/compute.js,can/model/model.js,can/view/view.js,can/view/ejs/ejs.js,can/control/control.js,can/route/route.js,can/control/route/route.js,can/util/object/object.js,can/util/string/string.js,can/util/fixture/fixture.js
- * Download from: http://bitbuilder.herokuapp.com/can.custom.js?configuration=jquery&plugins=can%2Fconstruct%2Fconstruct.js&plugins=can%2Fobserve%2Fobserve.js&plugins=can%2Fobserve%2Fcompute%2Fcompute.js&plugins=can%2Fmodel%2Fmodel.js&plugins=can%2Fview%2Fview.js&plugins=can%2Fview%2Fejs%2Fejs.js&plugins=can%2Fcontrol%2Fcontrol.js&plugins=can%2Froute%2Froute.js&plugins=can%2Fcontrol%2Froute%2Froute.js&plugins=can%2Futil%2Fobject%2Fobject.js&plugins=can%2Futil%2Fstring%2Fstring.js&plugins=can%2Futil%2Ffixture%2Ffixture.js
+ * Includes: can/construct/construct.js,can/observe/observe.js,can/observe/compute/compute.js,can/model/model.js,can/view/view.js,can/view/ejs/ejs.js,can/control/control.js,can/route/route.js,can/control/route/route.js,can/control/plugin/plugin.js,can/util/object/object.js,can/util/string/string.js,can/util/fixture/fixture.js
+ * Download from: http://bitbuilder.herokuapp.com/can.custom.js?configuration=jquery&plugins=can%2Fconstruct%2Fconstruct.js&plugins=can%2Fobserve%2Fobserve.js&plugins=can%2Fobserve%2Fcompute%2Fcompute.js&plugins=can%2Fmodel%2Fmodel.js&plugins=can%2Fview%2Fview.js&plugins=can%2Fview%2Fejs%2Fejs.js&plugins=can%2Fcontrol%2Fcontrol.js&plugins=can%2Froute%2Froute.js&plugins=can%2Fcontrol%2Froute%2Froute.js&plugins=can%2Fcontrol%2Fplugin%2Fplugin.js&plugins=can%2Futil%2Fobject%2Fobject.js&plugins=can%2Futil%2Fstring%2Fstring.js&plugins=can%2Futil%2Ffixture%2Ffixture.js
  */
 (function(undefined) {
 
@@ -4359,8 +4359,110 @@
         return can;
     })(__m3, __m19, __m18);
 
+    // ## can/control/plugin/plugin.js
+    var __m22 = (function($, can) {
+        //used to determine if a control instance is one of controllers
+        //controllers can be strings or classes
+        var i,
+            isAControllerOf = function(instance, controllers) {
+                for (i = 0; i < controllers.length; i++) {
+                    if (typeof controllers[i] == 'string' ? instance.constructor._shortName == controllers[i] : instance instanceof controllers[i]) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            makeArray = can.makeArray,
+            old = can.Control.setup;
+
+        can.Control.setup = function() {
+            // if you didn't provide a name, or are control, don't do anything
+            if (this !== can.Control) {
+
+
+                var pluginName = this.pluginName || this._fullName;
+
+                // create jQuery plugin
+                if (pluginName !== 'can_control') {
+                    this.plugin(pluginName);
+                }
+
+                old.apply(this, arguments);
+            }
+        };
+
+        $.fn.extend({
+
+
+                controls: function() {
+                    var controllerNames = makeArray(arguments),
+                        instances = [],
+                        controls, c, cname;
+                    //check if arguments
+                    this.each(function() {
+
+                        controls = can.$(this).data("controls");
+                        if (!controls) {
+                            return;
+                        }
+                        for (var i = 0; i < controls.length; i++) {
+                            c = controls[i];
+                            if (!controllerNames.length || isAControllerOf(c, controllerNames)) {
+                                instances.push(c);
+                            }
+                        }
+                    });
+                    return instances;
+                },
+
+
+                control: function(control) {
+                    return this.controls.apply(this, arguments)[0];
+                }
+            });
+
+        can.Control.plugin = function(pluginname) {
+            var control = this;
+
+            if (!$.fn[pluginname]) {
+                $.fn[pluginname] = function(options) {
+
+                    var args = makeArray(arguments), //if the arg is a method on this control
+                        isMethod = typeof options == "string" && $.isFunction(control.prototype[options]),
+                        meth = args[0],
+                        returns;
+                    this.each(function() {
+                        //check if created
+                        var plugin = can.$(this).control(control);
+
+                        if (plugin) {
+                            if (isMethod) {
+                                // call a method on the control with the remaining args
+                                returns = plugin[meth].apply(plugin, args.slice(1));
+                            } else {
+                                // call the plugin's update method
+                                plugin.update.apply(plugin, args);
+                            }
+                        } else {
+                            //create a new control instance
+                            control.newInstance.apply(control, [this].concat(args));
+                        }
+                    });
+                    return returns !== undefined ? returns : this;
+                };
+            }
+        }
+
+        can.Control.prototype.update = function(options) {
+            can.extend(this.options, options);
+            this.on();
+        };
+
+        return can;
+    })(jQuery, __m3, __m18);
+
     // ## can/util/object/object.js
-    var __m22 = (function(can) {
+    var __m23 = (function(can) {
 
         var isArray = can.isArray,
             // essentially returns an object that has all the must have comparisons ...
@@ -4490,7 +4592,7 @@
     })(__m3);
 
     // ## can/util/fixture/fixture.js
-    var __m23 = (function(can) {
+    var __m24 = (function(can) {
 
         // Get the URL from old Steal root, new Steal config or can.fixture.rootUrl
         var getUrl = function(url) {
@@ -5094,7 +5196,7 @@
         can.fixture.overwrites = overwrites;
         can.fixture.make = can.fixture.store;
         return can.fixture;
-    })(__m3, __m2, __m22);
+    })(__m3, __m2, __m23);
 
     window['can'] = __m5;
 })();
