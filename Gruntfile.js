@@ -37,6 +37,18 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', 'jshint');
 
 
+    // connect
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    gruntConfig.connect = {
+        root: {
+            options: {
+                port: 8082,
+                base: '.'
+            }
+        }
+    };
+
+
     // test
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     gruntConfig.jasmine = {
@@ -61,6 +73,7 @@ module.exports = function (grunt) {
         }
     };
     grunt.registerTask('test', 'jasmine:src');
+    grunt.registerTask('serve', ['jasmine:src:build', 'connect:root:keepalive']);
 
 
     // coverage
@@ -71,13 +84,14 @@ module.exports = function (grunt) {
                 coverage: 'output/coverage/coverage.json',
                 report: [
                     {type: 'text-summary'},
-                    {type: 'html', options: {dir: 'target/coverage'}},
-                    {type: 'cobertura', options: {dir: 'target/cobertura'}}
+                    {type: 'html', options: {dir: 'output/coverage'}},
+                    {type: 'cobertura', options: {dir: 'output/cobertura'}}
                 ]
             }
         }
     });
     grunt.registerTask('cover', 'jasmine:istanbul');
+
 
     // grunt
     grunt.initConfig(gruntConfig);

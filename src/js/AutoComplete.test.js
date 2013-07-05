@@ -90,6 +90,36 @@ describe('AutoComplete', function () {
             });
         });
 
+        describe('openPopup', function () {
+            var popup;
+            beforeEach(function () {
+                spyOn(window, 'open').andCallFake(function () {
+                    popup = {
+                        focus: jasmine.createSpy()
+                    };
+                    return popup;
+                });
+                autoComplete.openPopup('zealake.com');
+            });
+            it('sets the right attributes', function () {
+                expect(window.open).toHaveBeenCalledWith('zealake.com', '_blank', 'resizable');
+            });
+            it('receives focus', function () {
+                expect(popup.focus).toHaveBeenCalledWith();
+            });
+        });
+
+        describe('focus', function () {
+            beforeEach(function () {
+                spyOn($.fn, 'focus').andReturn();
+                autoComplete.focus();
+            });
+            it('should focus its element', function () {
+                expect($.fn.focus).toHaveBeenCalledWith();
+                expect($.fn.focus.mostRecentCall.object).toBe('#name');
+            });
+        });
+
     });
 
 
@@ -120,25 +150,6 @@ describe('AutoComplete', function () {
 
         });
 
-    });
-
-    describe('openPopup', function () {
-        var popup;
-        beforeEach(function () {
-            spyOn(window, 'open').andCallFake(function () {
-                popup = {
-                    focus: jasmine.createSpy()
-                };
-                return popup;
-            });
-            autoComplete.openPopup('zealake.com');
-        });
-        it('sets the right attributes', function () {
-            expect(window.open).toHaveBeenCalledWith('zealake.com', '_blank', 'resizable');
-        });
-        it('receives focus', function () {
-            expect(popup.focus).toHaveBeenCalledWith();
-        });
     });
 
 });
