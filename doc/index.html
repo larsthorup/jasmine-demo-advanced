@@ -28,6 +28,12 @@
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
+
+        <style>
+            .reveal li {
+                margin-top: 10px;
+            }
+        </style>
 	</head>
 
 	<body>
@@ -75,42 +81,84 @@
                     </section>
 
                     <section>
-                        <h2>Mocking methods</h2>
+
+                        <h2>How to test in isolation?</h2>
+
+                        <ul>
+                            <li>We want to test the 'keypress' event handler</li>
+                            <li>in isolation</li>
+                            <li>i.e. without involving the getMatch() method</li>
+                        </ul>
 
                         <pre><code data-trim>
-describe('when a key is pressed that has a match', function () {
+'keypress': function (element, event) {
+    var pattern = this.element.val();
+    pattern += String.fromCharCode(event.charCode);
+    var match = this.getMatch(pattern);
+    if (match) {
+        event.preventDefault();
+        this.element.val(match);
+    }
+}
+                        </code></pre>
 
-    beforeEach(function () {
-        spyOn(autoComplete, 'getMatch').andReturn('monique');
-        $('#name').trigger($.Event('keypress', {charCode: 109}));
-    });
+                    </section>
 
-    it('should invoke the getMatch function', function () {
-        expect(autoComplete.getMatch).toHaveBeenCalledWith('m');
-    });
+                    <section>
 
-    it('should replace the value of the input field ', function () {
-        expect($('#name')).toHaveValue('monique');
-    });
-});
+                        <h2>Mocking methods</h2>
+
+                        <ul>
+                            <li>We can mock the getMatch() method</li>
+                            <li>decide how the mock should behave</li>
+                            <li>verify that the mocked method was called correctly</li>
+                        </ul>
+
+                        <pre><code data-trim>
+spyOn(autoComplete, 'getMatch').andReturn('monique');
+
+$('#name').trigger($.Event('keypress', {charCode: 109}));
+
+expect(autoComplete.getMatch).toHaveBeenCalledWith('m');
+
+expect($('#name')).toHaveValue('monique');
                         </code></pre>
 
                     </section>
 
                     <section>
                         <h2>Mocking global functions</h2>
+
+                        <ul>
+                            <li>Global functions are properties of the window object</li>
+                        </ul>
+
+                        <pre><code data-trim>
+openPopup: function (url) {
+    var popup = window.open(url, '_blank', 'resizable');
+    popup.focus();
+}
+                        </code></pre>
+
+                        <pre><code data-trim>
+var popup;
+spyOn(window, 'open').andCallFake(function () {
+    popup = {
+        focus: jasmine.createSpy()
+    };
+    return popup;
+});
+
+autoComplete.openPopup('zealake.com');
+
+expect(window.open).toHaveBeenCalledWith('zealake.com', '_blank', 'resizable');
+
+expect(popup.focus).toHaveBeenCalledWith();
+                        </code></pre>
                     </section>
 
                     <section>
                         <h2>Mocking constructors</h2>
-                    </section>
-
-                    <section>
-                        <h2>Mocking time</h2>
-                    </section>
-
-                    <section>
-                        <h2>Mocking timers</h2>
                     </section>
 
                     <section>
@@ -119,6 +167,22 @@ describe('when a key is pressed that has a match', function () {
 
                     <section>
                         <h2>DOM fixtures</h2>
+                    </section>
+
+                    <section>
+                        <h2>How to deal with current time and date?</h2>
+                    </section>
+
+                    <section>
+                        <h2>Mocking time</h2>
+                    </section>
+
+                    <section>
+                        <h2>How to avoid waiting?</h2>
+                    </section>
+
+                    <section>
+                        <h2>Mocking timers</h2>
                     </section>
 
                     <section>

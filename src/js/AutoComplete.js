@@ -43,6 +43,11 @@
             } else {
                 return null;
             }
+        },
+
+        openPopup: function (url) {
+            var popup = window.open(url, '_blank', 'resizable');
+            popup.focus();
         }
     });
 
