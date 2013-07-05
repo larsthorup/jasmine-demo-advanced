@@ -48,6 +48,10 @@
         openPopup: function (url) {
             var popup = window.open(url, '_blank', 'resizable');
             popup.focus();
+        },
+
+        focus: function () {
+            this.element.focus();
         }
     });
 

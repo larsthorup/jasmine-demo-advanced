@@ -159,6 +159,33 @@ expect(popup.focus).toHaveBeenCalledWith();
 
                     <section>
                         <h2>Mocking constructors</h2>
+
+                        <ul>
+                            <li>Constructors are functions</li>
+                            <li>with <code>this</code> being the object to construct</li>
+                        </ul>
+
+                        <pre><code data-trim>
+this.input = new window.AutoComplete(inputElement, {
+    listUrl: this.options.listUrl
+});
+this.input.focus();
+                        </code></pre>
+
+                        <pre><code data-trim>
+spyOn(window, 'AutoComplete').andCallFake(function () {
+    this.focus = jasmine.createSpy();
+});
+
+expect(window.AutoComplete.callCount).toBe(1);
+var args = window.AutoComplete.mostRecentCall.args;
+expect(args[0]).toBe('#name');
+expect(args[1]).toEqual({listUrl: '/someUrl'});
+
+var object = window.AutoComplete.mostRecentCall.object;
+expect(object.focus).toHaveBeenCalledWith();
+                        </code></pre>
+
                     </section>
 
                     <section>
