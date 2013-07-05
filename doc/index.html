@@ -353,6 +353,33 @@ autoComplete = new AutoComplete('#name');
 
                     <section>
                         <h2>Spying on events</h2>
+
+                        <ul>
+                            <li>How do we test that an event was triggered?</li>
+                            <li>Or prevented from bubbling?</li>
+                            <li>Use jasmine-jquery!</li>
+                        </ul>
+
+                        <pre><code data-trim>
+'keypress': function (element, event) {
+    var pattern = this.element.val() +
+                            String.fromCharCode(event.charCode);
+    var match = this.getMatch(pattern);
+    if(match) {
+        event.preventDefault();
+        this.element.val(match);
+    }
+}
+                        </code></pre>
+
+                        <pre><code data-trim>
+keypressEvent = spyOnEvent('#name', 'keypress');
+
+$('#name').trigger($.Event('keypress', {charCode: 109}));
+
+expect(keypressEvent).toHaveBeenPrevented();
+                        </code></pre>
+
                     </section>
 
                     <section>
