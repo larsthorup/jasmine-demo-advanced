@@ -189,6 +189,58 @@ expect(object.focus).toHaveBeenCalledWith();
                     </section>
 
                     <section>
+                        <h2>How to avoid waiting?</h2>
+                    </section>
+
+                    <section>
+                        <h2>Mocking timers</h2>
+                    </section>
+
+                    <section>
+                        <h2>Mocking time</h2>
+
+                        <ul>
+                            <li><code>new Date()</code> tends to return different values over time</li>
+                            <li>Actually, that's the whole point :)</li>
+                            <li>But how do we test code that does that?</li>
+                            <li>We can mock the Date() constructor!</li>
+                        </ul>
+
+                        <pre><code data-trim>
+var then = new Date();
+
+jasmine.Clock.tick(42000);
+var now = new Date();
+
+expect(now.getTime() - then.getTime()).toBe(42000);
+                        </code></pre>
+
+                    </section>
+
+                    <section>
+                        <h2>Mocking Date() with Jasmine</h2>
+
+                        <ul>
+                            <li>Keep Date() and setTimeout() in sync</li>
+                        </ul>
+
+                        <pre><code data-trim>
+jasmine.GlobalDate = window.Date;
+
+var MockDate = function () {
+    var now = jasmine.Clock.defaultFakeTimer.nowMillis;
+    return new jasmine.GlobalDate(now);
+};
+MockDate.prototype = jasmine.GlobalDate.prototype;
+window.Date = MockDate;
+jasmine.getEnv().currentSpec.after(function () {
+    window.Date = jasmine.GlobalDate;
+});
+                        </code></pre>
+
+                    </section>
+
+                    <section>
                         <h2>Mocking AJAX requests</h2>
 
                         <ul>
@@ -209,6 +261,7 @@ can.fixture('/getNames', function (original, respondWith) {
 autoComplete = new AutoComplete('#name', {
     listUrl: '/getNames'
 });
+jasmine.Clock.tick(can.fixture.delay);
                         </code></pre>
 
                         <pre><code data-trim>
@@ -239,22 +292,6 @@ $('<input id="name" />').appendTo('#sandbox');
 autoComplete = new AutoComplete('#name');
                         </code></pre>
 
-                    </section>
-
-                    <section>
-                        <h2>How to deal with current time and date?</h2>
-                    </section>
-
-                    <section>
-                        <h2>Mocking time</h2>
-                    </section>
-
-                    <section>
-                        <h2>How to avoid waiting?</h2>
-                    </section>
-
-                    <section>
-                        <h2>Mocking timers</h2>
                     </section>
 
                     <section>
