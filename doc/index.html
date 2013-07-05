@@ -68,6 +68,21 @@
 
                 <section>
                     <h2>Agenda</h2>
+
+                    <ul>
+                        <li>Unit tests gives quality feedback</li>
+                        <ul>
+                            <li>Make them fast</li>
+                            <li>Make them precise</li>
+                        </ul>
+                        <li>Run thousands of unit tests in seconds</li>
+                        <li>We will look at</li>
+                        <ul>
+                            <li>Mocking techniques</li>
+                            <li>Front-end specific testing patterns</li>
+                        </ul>
+                        <li>Assuming knowledge about JavaScript and unit testing</li>
+                    </ul>
                 </section>
 
                 <section>
@@ -189,11 +204,52 @@ expect(object.focus).toHaveBeenCalledWith();
                     </section>
 
                     <section>
+
                         <h2>How to avoid waiting?</h2>
+
+                        <ul>
+                            <li>We want the tests to be fast</li>
+                            <li>So don't use Jasmine <code>waitsFor()</code></li>
+                            <li>But we often need to wait</li>
+                            <ul>
+                                <li>For animations to complete</li>
+                                <li>For AJAX responses to return</li>
+                            </ul>
+                        </ul>
+
+                        <pre><code data-trim>
+delayHide: function () {
+    var self = this;
+    setTimeout(function () {
+        self.element.hide();
+    }, this.options.hideDelay);
+}
+                        </code></pre>
+
                     </section>
 
                     <section>
                         <h2>Mocking timers</h2>
+
+                        <ul>
+                            <li>Use Jasmine's mock clock</li>
+                            <li>Control the clock explicitly</li>
+                            <li>Now the test completes in milliseconds</li>
+                            <li>without waiting</li>
+                        </ul>
+
+                        <pre><code data-trim>
+jasmine.Clock.useMock();
+
+autoComplete.delayHide();
+
+expect($('#name')).toBeVisible();
+
+jasmine.Clock.tick(500);
+
+expect($('#name')).not.toBeVisible();
+                        </code></pre>
+
                     </section>
 
                     <section>
@@ -203,7 +259,8 @@ expect(object.focus).toHaveBeenCalledWith();
                             <li><code>new Date()</code> tends to return different values over time</li>
                             <li>Actually, that's the whole point :)</li>
                             <li>But how do we test code that does that?</li>
-                            <li>We can mock the Date() constructor!</li>
+                            <li>We cannot <code>expect</code> on a value that changes on every run</li>
+                            <li>We can mock the <code>Date()</code> constructor!</li>
                         </ul>
 
                         <pre><code data-trim>

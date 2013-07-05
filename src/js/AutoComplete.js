@@ -1,6 +1,9 @@
 (function (window) {
 
     window.AutoComplete = can.Control({
+        defaults: {
+            hideDelay: 200
+        }
     },
     {
         init: function () {
@@ -52,6 +55,13 @@
 
         focus: function () {
             this.element.focus();
+        },
+
+        delayHide: function () {
+            var self = this;
+            setTimeout(function () {
+                self.element.hide();
+            }, this.options.hideDelay);
         }
     });
 

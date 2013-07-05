@@ -10,7 +10,8 @@ describe('AutoComplete', function () {
 
         beforeEach(function () {
             autoComplete = new AutoComplete('#name', {
-                list: ['lars', 'matt', 'mike', 'nick', 'kin']
+                list: ['lars', 'matt', 'mike', 'nick', 'kin'],
+                hideDelay: 500
             });
         });
 
@@ -117,6 +118,23 @@ describe('AutoComplete', function () {
             it('should focus its element', function () {
                 expect($.fn.focus).toHaveBeenCalledWith();
                 expect($.fn.focus.mostRecentCall.object).toBe('#name');
+            });
+        });
+
+        describe('delayHide', function () {
+            beforeEach(function () {
+                autoComplete.delayHide();
+            });
+            it('should initially stay visible', function () {
+                expect($('#name')).toBeVisible();
+            });
+            describe('after a delay', function () {
+                beforeEach(function () {
+                    jasmine.Clock.tick(500);
+                });
+                it('should be invisible', function () {
+                    expect($('#name')).not.toBeVisible();
+                });
             });
         });
 
