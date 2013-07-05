@@ -436,6 +436,28 @@ jasmine.getEnv().currentSpec.addMatchers({
 
                 <section>
                     <h2>Structure of test code</h2>
+                    <ul>
+                        <li>Reuse common setup code</li>
+                        <li>By nesting Jasmine's <code>describe()</code> functions</li>
+                    </ul>
+                    <pre><code data-trim>
+describe('delayHide', function () {
+    beforeEach(function () {
+        autoComplete.delayHide();
+    });
+    it('should initially stay visible', function () {
+        expect($('#name')).toBeVisible();
+    });
+    describe('after a delay', function () {
+        beforeEach(function () {
+            jasmine.Clock.tick(500);
+        });
+        it('should be invisible', function () {
+            expect($('#name')).not.toBeVisible();
+        });
+    });
+});
+                    </code></pre>
                 </section>
 
                 <section>
