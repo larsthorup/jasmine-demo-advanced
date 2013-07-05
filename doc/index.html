@@ -85,9 +85,9 @@
                         <h2>How to test in isolation?</h2>
 
                         <ul>
-                            <li>We want to test the 'keypress' event handler</li>
-                            <li>in isolation</li>
-                            <li>i.e. without involving the getMatch() method</li>
+                            <li>We want to test code in isolation</li>
+                            <li>here the code is the 'keypress' event handler</li>
+                            <li>and isolation means not invoking the getMatch() method</li>
                         </ul>
 
                         <pre><code data-trim>
@@ -190,6 +190,30 @@ expect(object.focus).toHaveBeenCalledWith();
 
                     <section>
                         <h2>Mocking AJAX requests</h2>
+
+                        <ul>
+                            <li>To test in isolation</li>
+                            <li>To vastly speed up the tests</li>
+                            <li>Many options</li>
+                            <ul>
+                                <li>can.fixture</li>
+                                <li>Mockjax</li>
+                                <li>Sinon</li>
+                            </ul>
+                        </ul>
+
+                        <pre><code data-trim>
+can.fixture('/getNames', function (original, respondWith) {
+    respondWith({list: ['rachel', 'lakshmi']});
+});
+autoComplete = new AutoComplete('#name', {
+    listUrl: '/getNames'
+});
+                        </code></pre>
+                        <pre><code data-trim>
+respondWith(500); // Internal server error
+                        </code></pre>
+
                     </section>
 
                     <section>
