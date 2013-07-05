@@ -391,10 +391,32 @@ expect(keypressEvent).toHaveBeenPrevented();
                 <section>
                     <section>
                         <h2>Expressive matchers</h2>
+
+                        <ul>
+                            <li>Make your tests more readable</li>
+                            <li>Use jasmine-jquery for jQuery-specific matchers</li>
+                            <li>Instead of:</li>
+                        </ul>
+
+                        <pre><code data-trim>
+expect($('#name').is(':visible')).toBeFalsy();
+                        </code></pre>
+
+                        <ul>
+                            <li>Prefer:</li>
+                        </ul>
+
+                        <pre><code data-trim>
+expect($('#name')).not.toBeVisible();
+                        </code></pre>
                     </section>
 
                     <section>
                         <h2>Roll your own matchers</h2>
+
+                        <ul>
+                            <li><a href="https://github.com/pivotal/jasmine/wiki/Matchers">github.com/pivotal/jasmine/wiki/Matchers</a></li>
+                        </ul>
                     </section>
 
                 </section>

@@ -127,6 +127,7 @@ describe('AutoComplete', function () {
             });
             it('should initially stay visible', function () {
                 expect($('#name')).toBeVisible();
+                expect($('#name').is(':visible')).toBeTruthy();
             });
             describe('after a delay', function () {
                 beforeEach(function () {
@@ -134,6 +135,7 @@ describe('AutoComplete', function () {
                 });
                 it('should be invisible', function () {
                     expect($('#name')).not.toBeVisible();
+                    expect($('#name').is(':visible')).toBeFalsy();
                 });
             });
         });
