@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>reveal.js - The HTML Presentation Framework</title>
+		<title>Advanced Jasmine - Front-end JavaScript unit testing</title>
 
 		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
 		<meta name="author" content="Hakim El Hattab">
@@ -506,6 +506,62 @@ can.each([
 });
                     </code></pre>
                 </section>
+
+
+                <section>
+                    <section>
+                        <h2>Leak detection</h2>
+                    </section>
+
+                    <section>
+                        <h2>DOM element leaks</h2>
+
+                        <ul>
+                            <li>DOM Fixtures are cleaned up automatically</li>
+                            <li>But sometimes code needs to go beyond the fixture, appending to $('body'), e.g for overlays</li>
+                            <li>That code should have a way to clean up those elements</li>
+                            <li>And our tests should invoke that cleanup</li>
+                            <li>And we can easily verify that this is always done</li>
+                        </ul>
+
+                        <pre><code data-trim>
+spec.after(function () {
+    var leaks = $('body').children(':not(#HTMLReporter)');
+    expect(leaks).not.toExist();
+    leaks.remove();
+});
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Memory leaks</h2>
+
+                        <ul>
+                            <li>window.performance.memory: a Google Chrome extension</li>
+                            <li>Collect memory consumption data for every test</li>
+                            <li>Sort and investigate the largest memory consumers</li>
+                            <li>However, performance data is not reproducible</li>
+                            <li>And the garbage collector disturbs the picture</li>
+                            <li>But still usable</li>
+                        </ul>
+
+                    <pre><code data-trim>
+// run Chrome with --enable-memory-info --js-flags="--expose-gc"
+if (window.performance) {
+    if (window.gc) { window.gc(); }
+    spec.heapSizeBefore = window.performance.memory.usedJSHeapSize;
+    spec.after(function () {
+        if(window.gc) { window.gc(); }
+        spec.heapSizeAfter = window.performance.memory.usedJSHeapSize;
+        console.log(spec.heapSizeAfter - spec.heapSizeBefore, spec.getFullName());
+    });
+}
+                    </code></pre>
+
+                    </section>
+
+                </section>
+
 
                 <section>
                     <h2>Resources</h2>
